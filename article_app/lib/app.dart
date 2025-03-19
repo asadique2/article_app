@@ -1,3 +1,5 @@
+import 'package:article_app/app/routes/app_routes.dart';
+import 'package:article_app/app_bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,7 +20,11 @@ class App extends StatelessWidget {
       },
       child: ScreenUtilInit(
         designSize: Size(430, 932),
-        child: GetMaterialApp(home: Text('data')),
+        child: GetMaterialApp(
+          initialRoute: Routes.article,
+          initialBinding: AppBinding(),
+          getPages: AppPages.pages,
+        ),
       ),
     );
   }
