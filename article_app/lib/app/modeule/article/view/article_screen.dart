@@ -1,5 +1,7 @@
 import 'package:article_app/app/themes/app_colors.dart';
+import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/data/images.dart';
+import 'package:article_app/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -24,22 +26,48 @@ class ArticleScreen extends GetView<ArticleController> {
                 border: Border.all(color: AppColors.disableColor),
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     decoration: BoxDecoration(
                       color: AppColors.baseColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16.r),
-                        bottomLeft: Radius.circular(16.r),
-                      ),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     height: 56.h,
                     width: 56.h,
                     child: Center(child: Text('S')),
                   ),
-                  Column(children: [Text('data'), Text('data'), Text('data')]),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        title(text: 'Granactive Retinoid 5%'),
+                        SizedBox(height: 4.h),
+                        body(
+                          text:
+                              'This water-free solution contains a 5% concentration of retinoid.',
+                          maxLine: 4,
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            caption(text: "By: Jane Smith"),
+                            caption(
+                              text:
+                                  AppUtils.formatDate(
+                                    "2025-03-07T10:12:11.199Z",
+                                  ) ??
+                                  '__',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+              ).paddingAll(12.r),
             ).paddingSymmetric(horizontal: 12.w),
         itemCount: 20,
       ),
