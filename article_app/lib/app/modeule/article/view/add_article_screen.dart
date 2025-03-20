@@ -1,3 +1,4 @@
+import 'package:article_app/app/modeule/article/controller/add_article_controller.dart';
 import 'package:article_app/app/themes/app_colors.dart';
 import 'package:article_app/app/widgets/common_input_filed.dart';
 import 'package:article_app/app/widgets/common_text.dart';
@@ -7,40 +8,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class AddArticleScreen extends StatefulWidget {
+class AddArticleScreen extends GetView<AddArticleController> {
   const AddArticleScreen({super.key});
 
   @override
-  State<AddArticleScreen> createState() => _AddArticleScreenState();
-}
-
-class _AddArticleScreenState extends State<AddArticleScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create Article')),
+      appBar: AppBar(
+        title: Obx(
+          () => Text(
+            controller.isUpdating.value ? 'Update Article' : 'Create Article',
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(height: 20.h),
-            title(text: 'Write and share your thoughts effortlessly'),
-            SizedBox(height: 4.h),
-            caption(
-              text:
-                  'Express your ideas, tell your story, or share valuable insights with the world. Start crafting engaging content that inspires, informs, or entertains. Your words matter—begin your article now and make an impact!',
+            if (!controller.isUpdating.value) ...[
+              title(text: 'Write and share your thoughts effortlessly'),
+              SizedBox(height: 4.h),
+              caption(
+                text:
+                    'Express your ideas, tell your story, or share valuable insights with the world. Start crafting engaging content that inspires, informs, or entertains. Your words matter—begin your article now and make an impact!',
+              ),
+              SizedBox(height: 30.h),
+            ],
+            CommonInputField(
+              wrapper: controller.titleWrapper,
+              labelText: 'Title',
             ),
-            SizedBox(height: 30.h),
-            CommonInputField(wrapper: TextFieldWrapper(), labelText: 'Title'),
-            SizedBox(height: 20.h),
-            CommonInputField(wrapper: TextFieldWrapper(), labelText: 'Author'),
             SizedBox(height: 20.h),
             CommonInputField(
-              wrapper: TextFieldWrapper(),
+              wrapper: controller.authorWrapper,
+              labelText: 'Author',
+            ),
+            SizedBox(height: 20.h),
+            CommonInputField(
+              wrapper: controller.categoryWrapper,
               labelText: 'Category',
             ),
             SizedBox(height: 20.h),
             CommonInputField(
-              wrapper: TextFieldWrapper(),
+              wrapper: controller.descriptionWrapper,
               labelText: 'Description',
               maxLine: 5,
             ),
@@ -50,7 +60,12 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       bottomNavigationBar: BottomAppBar(
         surfaceTintColor: AppColors.whiteColor,
         color: AppColors.whiteColor,
-        child: CustomButton(name: 'Submit', onTap: () {}),
+        child: Obx(
+          () => CustomButton(
+            name: controller.isUpdating.value ? 'Update' : 'Submit',
+            onTap: () => controller.handelButton(),
+          ),
+        ),
       ),
     );
   }
