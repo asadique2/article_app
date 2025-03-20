@@ -1,5 +1,7 @@
+import 'package:article_app/app/modeule/article/binding/add_article_binding.dart';
 import 'package:article_app/app/modeule/article/binding/article_binding.dart';
 import 'package:article_app/app/modeule/article/binding/article_details_binding.dart';
+import 'package:article_app/app/modeule/article/view/add_article_screen.dart';
 import 'package:article_app/app/modeule/article/view/article_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
@@ -22,6 +24,11 @@ class AppPages {
       name: Routes.article_details,
       page: () => const ArticleDetailsScreen(),
       binding: ArticleDetailsBinding(),
+    ),
+    GetPage(
+      name: Routes.create_article,
+      page: () => const AddArticleScreen(),
+      binding: AddArticleBinding(),
     ),
   ];
 }

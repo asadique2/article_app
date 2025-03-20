@@ -7,9 +7,6 @@ import 'package:article_app/utils/text_field_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../../widgets/common_input_filed.dart';
-import '../../../widgets/custom_button.dart';
 import '../controller/article_controller.dart';
 
 class ArticleScreen extends GetView<ArticleController> {
@@ -30,7 +27,7 @@ class ArticleScreen extends GetView<ArticleController> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.baseColor,
         foregroundColor: AppColors.whiteColor,
-        onPressed: () {},
+        onPressed: () => Get.toNamed(Routes.create_article),
         label: Row(
           children: [
             Icon(Icons.edit, size: 18.sp),
