@@ -58,6 +58,25 @@ Widget body({
   );
 }
 
+Widget boldBody({
+  required String text,
+  Color? textColor,
+  TextAlign? textAlign,
+  FontWeight? fontWeight,
+  int? maxLine,
+}) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontWeight: fontWeight ?? FontWeight.bold,
+      fontSize: 14.sp,
+      color: textColor,
+    ),
+    textAlign: textAlign,
+    maxLines: maxLine,
+  );
+}
+
 Widget caption({
   required String text,
   Color? textColor,

@@ -3,10 +3,13 @@ import 'package:article_app/app/themes/app_colors.dart';
 import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/data/images.dart';
 import 'package:article_app/utils/app_utils.dart';
+import 'package:article_app/utils/text_field_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../widgets/common_input_filed.dart';
+import '../../../widgets/custom_button.dart';
 import '../controller/article_controller.dart';
 
 class ArticleScreen extends GetView<ArticleController> {
@@ -15,12 +18,26 @@ class ArticleScreen extends GetView<ArticleController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Image.asset(AppImages.logo)),
-      drawer: Drawer(),
+      appBar: AppBar(
+        title: Image.asset(AppImages.logo),
+        actions: [Icon(Icons.sort).paddingOnly(right: 20.w)],
+      ),
       body: ListView.separated(
         separatorBuilder: (ctx, idx) => SizedBox(height: 10.h),
         itemBuilder: (ctx, idx) => articleCard(),
         itemCount: 20,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors.baseColor,
+        foregroundColor: AppColors.whiteColor,
+        onPressed: () {},
+        label: Row(
+          children: [
+            Icon(Icons.edit, size: 18.sp),
+            SizedBox(width: 10.w),
+            label(text: 'Create'),
+          ],
+        ),
       ),
     );
   }
@@ -37,16 +54,16 @@ class ArticleScreen extends GetView<ArticleController> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.baseColor,
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              height: 56.h,
-              width: 56.h,
-              child: Center(child: Text('S')),
-            ),
-            SizedBox(width: 10.w),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     color: AppColors.baseColor,
+            //     borderRadius: BorderRadius.circular(8.r),
+            //   ),
+            //   height: 56.h,
+            //   width: 56.h,
+            //   child: Center(child: Text('S')),
+            // ),
+            // SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
