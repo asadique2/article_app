@@ -1,16 +1,13 @@
-import '../../base/base_repository.dart';
+import 'package:article_app/data/urls.dart';
 
-class AllRepository extends BaseRepository {
-  Future<RepoResponse<GenericResponse>> updateUserData({
-    required UserRegistrationUpdate requestData,
-    required int? id,
-    String? token,
-  }) async {
-    final response = await controller.put(
-      path: "${URLs.userRegistration}$id/",
-      data: requestData.toJson(),
-      token: token,
-    );
+import '../../base/base_repository.dart';
+import '../../utils/exception_handler.dart';
+import '../model/generic_response.dart';
+import '../model/response.dart';
+
+class ArticleRepository extends BaseRepository {
+  Future<RepoResponse<GenericResponse>> getArticles() async {
+    final response = await controller.get(path: URLs.getArticle);
 
     return response is APIException
         ? RepoResponse(error: response)

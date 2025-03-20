@@ -1,8 +1,11 @@
+import 'package:article_app/app/routes/app_routes.dart';
 import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
+import '../../../themes/app_colors.dart';
 
 class ArticleDetailsScreen extends StatelessWidget {
   const ArticleDetailsScreen({super.key});
@@ -40,6 +43,19 @@ class ArticleDetailsScreen extends StatelessWidget {
             ),
           ],
         ).paddingSymmetric(horizontal: 12.w),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors.baseColor,
+        foregroundColor: AppColors.whiteColor,
+        onPressed:
+            () => Get.toNamed(Routes.create_article, arguments: 'update'),
+        label: Row(
+          children: [
+            Icon(Icons.edit, size: 18.sp),
+            SizedBox(width: 10.w),
+            label(text: 'Edit Article'),
+          ],
+        ),
       ),
     );
   }
