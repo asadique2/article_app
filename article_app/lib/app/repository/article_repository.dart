@@ -13,4 +13,14 @@ class ArticleRepository extends BaseRepository {
         ? RepoResponse(error: response)
         : RepoResponse(data: GenericResponse.fromJson(response));
   }
+
+  Future<RepoResponse<GenericResponse>> getArticlesDetails(String id) async {
+    final response = await controller.get(
+      path: '${URLs.getArticleDetails}/$id',
+    );
+
+    return response is APIException
+        ? RepoResponse(error: response)
+        : RepoResponse(data: GenericResponse.fromJson(response));
+  }
 }
