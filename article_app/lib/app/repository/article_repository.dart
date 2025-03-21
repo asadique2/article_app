@@ -37,4 +37,18 @@ class ArticleRepository extends BaseRepository {
         ? RepoResponse(error: response)
         : RepoResponse(data: GenericResponse.fromJson(response));
   }
+
+  Future<RepoResponse<GenericResponse>> updateArticle({
+    required ArticleRequestModel data,
+    required String id,
+  }) async {
+    final response = await controller.patch(
+      path: '${URLs.updateArticle}/$id',
+      data: data.toJson(),
+    );
+
+    return response is APIException
+        ? RepoResponse(error: response)
+        : RepoResponse(data: GenericResponse.fromJson(response));
+  }
 }

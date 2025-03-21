@@ -8,6 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../../../../utils/app_utils.dart';
 import '../../../model/generic_response.dart';
 import '../../../model/response.dart';
+import '../../../routes/app_routes.dart';
 
 class ArticleDetailsController extends BaseController<ArticleRepository> {
   RxBool isLoadingData = false.obs;
@@ -55,6 +56,16 @@ class ArticleDetailsController extends BaseController<ArticleRepository> {
       }
     } finally {
       isLoadingData(false);
+    }
+  }
+
+  handelUpdate() async {
+    var isUpdated = await Get.toNamed(
+      Routes.create_article,
+      arguments: articleDetails.value,
+    );
+    if (isUpdated != null && isUpdated) {
+      getArticlesDetails(articleDetails.value?.id ?? '');
     }
   }
 }

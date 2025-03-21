@@ -63,10 +63,7 @@ class ArticleDetailsScreen extends GetView<ArticleDetailsController> {
         onPressed:
             () =>
                 !controller.isLoadingData.value
-                    ? Get.toNamed(
-                      Routes.create_article,
-                      arguments: controller.articleDetails.value,
-                    )
+                    ? controller.handelUpdate()
                     : {},
         label: Row(
           children: [

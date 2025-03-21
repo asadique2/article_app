@@ -1,6 +1,7 @@
 import 'package:article_app/app/model/ArticleListModel.dart';
 import 'package:article_app/app/model/generic_response.dart';
 import 'package:article_app/app/model/response.dart';
+import 'package:article_app/app/routes/app_routes.dart';
 import 'package:article_app/base/base_controller.dart';
 import 'package:article_app/utils/app_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -39,5 +40,10 @@ class ArticleController extends BaseController<ArticleRepository> {
       isLoadingData(false);
     }
     print(articles.length);
+  }
+
+  handelCreateArticle() async {
+    var articleCreated = await Get.toNamed(Routes.create_article);
+    if (articleCreated != null && articleCreated) getArticles();
   }
 }

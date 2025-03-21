@@ -84,20 +84,16 @@ class NetworkRequester {
     }
   }
 
-  Future<dynamic> put({
+  Future<dynamic> patch({
     required String path,
     Map<String, dynamic>? query,
     Map<String, dynamic>? data,
-    String? token,
   }) async {
     try {
-      final options = Options(headers: {'Authorization': 'Bearer $token'});
-
-      final response = await _dio.put(
+      final response = await _dio.patch(
         path,
         queryParameters: query,
         data: data,
-        options: options,
       );
       return response.data;
     } on Exception catch (error) {
