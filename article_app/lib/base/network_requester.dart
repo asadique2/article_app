@@ -5,7 +5,6 @@ import '../utils/exception_handler.dart';
 
 class NetworkRequester {
   late Dio _dio;
-  late Dio _formDio;
 
   NetworkRequester() {
     prepareRequest();

@@ -7,8 +7,8 @@ import 'package:article_app/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../controller/article_controller.dart';
-import 'filters_view.dart';
 
 class ArticleScreen extends GetView<ArticleController> {
   const ArticleScreen({super.key});
@@ -26,32 +26,39 @@ class ArticleScreen extends GetView<ArticleController> {
         ],
       ),
       body: Obx(
-        () => NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent &&
-                !controller.isLoadingMore.value) {
-              controller.loadMoreArticle();
-            }
-            return false;
-          },
-          child:
-              controller.isLoadingData.value
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.separated(
+        () =>
+            controller.isLoadingData.value
+                ? Center(child: CircularProgressIndicator())
+                : controller.articles.isNotEmpty
+                ? NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.maxScrollExtent) {
+                      controller
+                          .loadMoreArticles(); // Load more data when user reaches bottom
+                    }
+                    return false;
+                  },
+                  child: ListView.separated(
                     separatorBuilder: (ctx, idx) => SizedBox(height: 10.h),
-                    itemCount: controller.articles.length + 1,
+                    itemCount:
+                        controller.articles.length + 1, // Add 1 for loader
                     itemBuilder: (ctx, idx) {
-                      if (idx < controller.articles.length) {
-                        return articleCard(controller.articles[idx]);
-                      } else {
-                        return controller.isLoadingMore.value
-                            ? Center(child: CircularProgressIndicator())
-                            : SizedBox();
+                      if (idx == controller.articles.length) {
+                        return Obx(
+                          () =>
+                              controller.isLoadingMoreData.value
+                                  ? Center(
+                                    child: CircularProgressIndicator(),
+                                  ) // Show loading at bottom
+                                  : SizedBox.shrink(),
+                        );
                       }
+                      return articleCard(controller.articles[idx]);
                     },
                   ),
-        ),
+                )
+                : Center(child: label(text: 'No article found')),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.baseColor,

@@ -1,5 +1,4 @@
 import 'package:article_app/app/modeule/article/controller/article_details_controller.dart';
-import 'package:article_app/app/routes/app_routes.dart';
 import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/utils/app_utils.dart';
 import 'package:flutter/material.dart';

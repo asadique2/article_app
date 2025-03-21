@@ -3,7 +3,6 @@ import 'package:article_app/app/themes/app_colors.dart';
 import 'package:article_app/app/widgets/common_input_filed.dart';
 import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/app/widgets/custom_button.dart';
-import 'package:article_app/utils/text_field_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

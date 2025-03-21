@@ -48,6 +48,7 @@ class FilterPage extends GetView<ArticleController> {
                   String item = controller.activeList[index];
                   return Obx(
                     () => CheckboxListTile(
+                      activeColor: AppColors.baseColor,
                       title: Text(item),
                       value: controller.selectedList.contains(item),
                       onChanged: (bool? selected) {

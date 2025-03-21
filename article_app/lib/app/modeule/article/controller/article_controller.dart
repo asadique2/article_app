@@ -1,11 +1,11 @@
+import 'dart:convert';
+
 import 'package:article_app/app/model/ArticleListModel.dart';
 import 'package:article_app/app/model/generic_response.dart';
 import 'package:article_app/app/model/response.dart';
 import 'package:article_app/app/routes/app_routes.dart';
 import 'package:article_app/base/base_controller.dart';
 import 'package:article_app/utils/app_utils.dart';
-import 'package:article_app/utils/text_field_wrapper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ import '../view/filters_view.dart';
 
 class ArticleController extends BaseController<ArticleRepository> {
   RxBool isLoadingData = false.obs;
-  RxBool isLoadingMore = false.obs;
+  RxBool isLoadingMoreData = false.obs;
   RxList<Article> articles = RxList();
 
   RxInt currentPage = 1.obs;
@@ -42,52 +42,64 @@ class ArticleController extends BaseController<ArticleRepository> {
   Future<void> getArticles({
     int page = 1,
     int size = 10,
-    Map<String, dynamic>? filters,
-    bool isLoadMore =
-        false, // Parameter to differentiate normal fetch & load more
+    List<String>? titles,
+    List<String>? categories,
+    List<String>? authors,
+    bool isLoadMore = false, // New parameter for pagination
   }) async {
-    if (isLoadingData.value || isLoadingMore.value) return;
-    if (isLoadMore) {
-      isLoadingMore(true);
-    } else {
+    if (!isLoadMore) {
       isLoadingData(true);
+    } else {
+      isLoadingMoreData(true); // Show loading indicator when fetching more
     }
 
     try {
+      // Construct filters properly
+      Map<String, dynamic> filters = {
+        if (titles != null && titles.isNotEmpty) "title": {"values": titles},
+        if (categories != null && categories.isNotEmpty)
+          "category": {"values": categories},
+        if (authors != null && authors.isNotEmpty)
+          "author": {"values": authors},
+      };
+
+      // Encode filters into a JSON string for API request
       Map<String, dynamic> queryParams = {
         "page": page,
         "size": size,
-        if (filters != null) "filters": filters,
+        if (filters.isNotEmpty) "filters": jsonEncode(filters), // JSON encoded
       };
 
       RepoResponse<GenericResponse> response = await repository.getArticles(
         queryParams,
       );
+
       if (response.data?.statusCode == 200) {
         ArticleListModel articleList = ArticleListModel.fromJson(
           response.data?.data,
         );
 
         if (articleList.article?.isNotEmpty ?? false) {
-          if (isLoadMore) {
-            articles.addAll(articleList.article ?? []);
+          if (!isLoadMore) {
+            articles.value = articleList.article ?? []; // Refresh data
           } else {
-            articles.value = articleList.article ?? [];
+            articles.addAll(articleList.article ?? []); // Append for pagination
           }
-          lastPage(articleList.lastPage ?? 1);
-          currentPage(articleList.currentPage ?? 1);
+          lastPage(articleList.lastPage);
+          currentPage(articleList.currentPage);
         }
-        updateFilterValue(articleList);
+
+        updateFilterValue(articleList); // Update filter values dynamically
       } else {
         AppUtils.showErrorMessage(response);
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print("Error fetching articles: $e");
       }
     } finally {
       isLoadingData(false);
-      isLoadingMore(false);
+      isLoadingMoreData(false); // Hide loader
     }
   }
 
@@ -113,16 +125,15 @@ class ArticleController extends BaseController<ArticleRepository> {
     titlesList.value = titleSet.toList();
   }
 
-  void loadMoreArticle() {
-    if (currentPage.value < lastPage.value) {
+  void loadMoreArticles() {
+    if (currentPage < lastPage.value && !isLoadingMoreData.value) {
       getArticles(
         page: currentPage.value + 1,
+        size: 10, // Keep the same page size
+        titles: selectedTitles,
+        categories: selectedCategory,
+        authors: selectedAuthor,
         isLoadMore: true,
-        filters: {
-          "title": {"values": selectedTitles},
-          "category": {"values": selectedCategory}, // Example category
-          "author": {"values": selectedAuthor},
-        },
       );
     }
   }
@@ -179,15 +190,17 @@ class ArticleController extends BaseController<ArticleRepository> {
 
   // Apply filters
   void applyFilters() {
-    Map<String, dynamic> filters = {
-      if (selectedTitles.isNotEmpty) "title": {"values": selectedTitles},
-      if (selectedCategory.isNotEmpty) "category": {"values": selectedCategory},
-      if (selectedAuthor.isNotEmpty) "author": {"values": selectedAuthor},
-    };
     currentPage(1);
     lastPage(1);
-    getArticles(filters: filters);
-    Get.back(result: filters);
+    articles.clear();
+    getArticles(
+      page: currentPage.value + 1,
+      size: 10, // Keep the same page size
+      titles: selectedTitles.value,
+      categories: selectedCategory.value,
+      authors: selectedAuthor.value,
+    );
+    Get.back();
   }
 
   goToFilter() async {
