@@ -7,11 +7,13 @@ class CustomButton extends StatelessWidget {
   final String name;
   final Function() onTap;
   final bool? isLoading;
+  final bool? isFilled;
   const CustomButton({
     super.key,
     required this.name,
     required this.onTap,
     this.isLoading,
+    this.isFilled,
   });
 
   @override
@@ -23,13 +25,20 @@ class CustomButton extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
-          color: AppColors.baseColor,
+          color: isFilled ?? true ? AppColors.baseColor : null,
+          border: Border.all(color: AppColors.baseColor),
         ),
         child: Center(
           child:
               isLoading ?? false
                   ? CircularProgressIndicator(color: AppColors.whiteColor)
-                  : body(text: name, textColor: AppColors.whiteColor),
+                  : boldBody(
+                    text: name,
+                    textColor:
+                        isFilled ?? true
+                            ? AppColors.whiteColor
+                            : AppColors.baseColor,
+                  ),
         ),
       ),
     );

@@ -26,6 +26,9 @@ class App extends StatelessWidget {
           initialBinding: AppBinding(),
           getPages: AppPages.pages,
           theme: ThemeData(
+            progressIndicatorTheme: const ProgressIndicatorThemeData(
+              color: AppColors.baseColor,
+            ),
             scaffoldBackgroundColor: AppColors.whiteColor,
             appBarTheme: AppBarTheme(
               backgroundColor: AppColors.whiteColor,

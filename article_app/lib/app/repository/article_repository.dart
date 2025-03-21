@@ -7,8 +7,13 @@ import '../model/generic_response.dart';
 import '../model/response.dart';
 
 class ArticleRepository extends BaseRepository {
-  Future<RepoResponse<GenericResponse>> getArticles() async {
-    final response = await controller.get(path: URLs.getArticle);
+  Future<RepoResponse<GenericResponse>> getArticles(
+    Map<String, dynamic> queryParams,
+  ) async {
+    final response = await controller.get(
+      path: URLs.getArticle,
+      query: queryParams,
+    );
 
     return response is APIException
         ? RepoResponse(error: response)

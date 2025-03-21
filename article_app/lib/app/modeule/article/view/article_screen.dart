@@ -4,11 +4,11 @@ import 'package:article_app/app/themes/app_colors.dart';
 import 'package:article_app/app/widgets/common_text.dart';
 import 'package:article_app/data/images.dart';
 import 'package:article_app/utils/app_utils.dart';
-import 'package:article_app/utils/text_field_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../controller/article_controller.dart';
+import 'filters_view.dart';
 
 class ArticleScreen extends GetView<ArticleController> {
   const ArticleScreen({super.key});
@@ -18,18 +18,40 @@ class ArticleScreen extends GetView<ArticleController> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(AppImages.logo),
-        actions: [Icon(Icons.sort).paddingOnly(right: 20.w)],
+        actions: [
+          GestureDetector(
+            onTap: () => controller.goToFilter(),
+            child: Icon(Icons.sort).paddingOnly(right: 20.w),
+          ),
+        ],
       ),
       body: Obx(
-        () =>
-            controller.isLoadingData.value
-                ? Center(child: CircularProgressIndicator())
-                : ListView.separated(
-                  separatorBuilder: (ctx, idx) => SizedBox(height: 10.h),
-                  itemBuilder:
-                      (ctx, idx) => articleCard(controller.articles[idx]),
-                  itemCount: 20,
-                ),
+        () => NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent &&
+                !controller.isLoadingMore.value) {
+              controller.loadMoreArticle();
+            }
+            return false;
+          },
+          child:
+              controller.isLoadingData.value
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.separated(
+                    separatorBuilder: (ctx, idx) => SizedBox(height: 10.h),
+                    itemCount: controller.articles.length + 1,
+                    itemBuilder: (ctx, idx) {
+                      if (idx < controller.articles.length) {
+                        return articleCard(controller.articles[idx]);
+                      } else {
+                        return controller.isLoadingMore.value
+                            ? Center(child: CircularProgressIndicator())
+                            : SizedBox();
+                      }
+                    },
+                  ),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.baseColor,
